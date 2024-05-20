@@ -1,0 +1,95 @@
+{% load static %}
+{% include 'postgresql/partials/_header.html' %}
+
+<form action="{% url 'filtros' %}" method="get">
+<div class="container text-center mt-4">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="operadoras"></label>
+                <select class="form-control" name="operadoras" id="operadoras">
+                    <option value="">Escolha uma operadora</option>
+                    <option value="vivo">Vivo</option>
+                    <option value="claro">Claro</option>
+                    <option value="niufibra">Niufibra</option>
+                    <option value="desktop">Desktop</option>
+                    <option value="gigamais">Giga+</option>
+                    <option value="hughesnet">Hughesnet</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="planos"></label>
+                <select class="form-control" name="planos" id="planos">
+                    <option value="">Escolha um plano</option>
+                    <option value="internet">Internet Banda Larga</option>
+                    <option value="satelite">Via Satélite</option>
+                    <option value="fibra">Fibra Ótica</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="filtro"></label>
+                <select class="form-control" name="filtro" id="filtro">
+                    <option value="">Ordenar</option>
+                    <option value="a-z">A-Z</option>
+                    <option value="menor-preco">Menor Preço</option>
+                    <option value="maior-velocidade">Maior Velocidade</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="cep"></label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP: apenas números">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                        <button class="btn btn-secondary" type="reset">Limpar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+
+<div class="container mt-4">
+    <div class="container text-center mt-4">
+    {% if informacoes_endereco %}
+        <h5>Exibindo resultados para {{ informacoes_endereco }}</h5>
+    {% elif fora_de_alcance %}
+        <h5>{{ fora_de_alcance }}</h5>
+    {% else %}
+        <h5>CEP não encontrado. Exibindo resultados para Guarujá - SP</h5>
+    {% endif %}
+    </div>
+    {% for plano in planos %}    
+        <div class="container my-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <!-- Logo -->
+                            <img src="{% static 'assets/'|add:plano.apelido|add:'.png' %}" alt="Logo" class="img-fluid mb-2">
+                            <!-- Nome(Link) -->
+                            <a href="{{ plano.url }}" target="_blank" class="h5 d-block">{{ plano.nome }}</a>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- Preço -->
+                            <h2 class="text-center">R${{ plano.preco }}/mês</h2>
+                            <!-- Descrição -->
+                            <p class="text-center">{{ plano.observacao }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- Botão com link -->
+                            <a href="{{ plano.url }}" target="_blank" class="btn btn-primary btn-lg btn-block">Contrate agora!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
